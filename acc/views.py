@@ -33,7 +33,7 @@ def delete(request):
         u.delete()
         return redirect("acc:index")
     else:
-        pass # 19일차
+        messages.warning(request, '혼나!')
     return redirect("acc:profile")
 
 def profile(request):
@@ -50,7 +50,7 @@ def signup(request):
             User.objects.create_user(username=un, password=up, comment=uc, age=ua, pic=pi)
             return redirect("acc:login")
         except:
-            messages.error(request, "틀림")
+            messages.error(request, "회원가입에서 문제가 발생하였습니다.")
     return render(request, "acc/signup.html")
 
 def logout_user(request):
@@ -68,8 +68,8 @@ def login_user(request):
         user = authenticate(username=un, password=up)        
         if user:
             login(request, user)
-            messages.info(request, f"{user}님 좋은 하루!!")
+            messages.success(request, f"{user}님 좋은 하루!!")
             return redirect("acc:index")
         else:
-            messages.error(request, "계정정보가 일치하지 않습니다.")
+            messages.error(request, "아이디 또는 비밀번호가 다릅니다.")
     return render(request, "acc/login.html")

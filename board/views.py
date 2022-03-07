@@ -33,7 +33,7 @@ def index(request):
         elif cate == "con":
             b = Board.objects.filter(content__contains=kw)
         else:
-            messages.error(request, "혼나!")
+            messages.warning(request, "혼나!")
             b = Board.objects.all()
     else:
         b = Board.objects.all()
@@ -98,7 +98,7 @@ def delete(request, bpk):
     if request.user == b.writer:
         b.delete()
     else:
-        messages.error(request, "혼나!!")
+        messages.warning(request, "혼나!!")
     return redirect("board:index")
 
 def detail(request, bpk):

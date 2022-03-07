@@ -67,7 +67,7 @@
 
         {% for i in messages %}
             <div class="alert {{i.tags}} alert-dismissible fade show" role="alert">
-                <strong>{{ i.tags }}</strong>{{ i.message }}
+                <strong>{{ i.tags }}. </strong>{{ i.message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
