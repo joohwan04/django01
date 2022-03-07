@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block con %}
+{% load mathfilters %}
+    <div class="container mt-4 mb-5">
+
+        <div class="row">
+            <div class="col-lg 6">
+                <h1><b>투표함</b></h1>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-end">
+                    <a href="{% url 'vote:create' %}" class="btn btn-dark btn-lg">TOPIC생성</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for i in tset %}
+                <div class="col-lg-4">
+                    <div class="card" style="width: 96%;">
+                        <img src="{{ i.maker.getpic }}" class="card-img-top" style="height:200px;"">
+                        <div class="card-body" {% if user in i.voter.all %} style="background-color:rgba(166, 255, 0, 0.2912)"{% endif %} >
+                            <h4 class="card-title"><b>{{ i.subject }}</b></h4>
+                            <p class="card-text">{{ i.summary }}</p>
+                            <div class="text-center">
+                                <a href="{% url 'vote:detail' i.id %}" class="btn btn-primary btn-lg">{% if user in i.voter.all %}결과보기{% else %}투표하기{% endif %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <nav aria-label="Page navigation example" class="mt-5">
+            <ul class="pagination justify-content-center pagination-sm">
+                {% if tset.has_previous %}
+                    <li class="page-item"><a class="page-link" href="{% url 'vote:index' %}?page=1&cate={{cate}}&kw={{kw}}">처음</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'vote:index' %}?page={{ bset.previous_page_number }}&cate={{cate}}&kw={{kw}}">이전</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">처음</a></li>
+                    <li class="page-item disabled"><a class="page-link">이전</a></li>
+                {% endif %}
+
+                {% for i in tset.paginator.page_range %}
+                    {% if i >= tset.number|sub:5 and tset.number|add:4 >= i %}
+                        <li class="page-item {% if tset.number == i %}active{% endif %}"><a class="page-link" href="{% url 'vote:index' %}?page={{i}}&cate={{cate}}&kw={{kw}}">{{i}}</a></li>
+                    {% endif %}
+                {% endfor %}
+        
+                {% if tset.has_next %}
+                    <li class="page-item"><a class="page-link" href="{% url 'vote:index' %}?page={{ bset.next_page_number }}&cate={{cate}}&kw={{kw}}">다음</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'vote:index' %}?page={{ bset.paginator.num_pages }}&cate={{cate}}&kw={{kw}}">마지막</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link">다음</a></li>
+                    <li class="page-item disabled"><a class="page-link">마지막</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </div>
+{% endblock %}

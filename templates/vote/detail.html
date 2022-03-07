@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block con %}
+{% load mathfilters %}
+    <div class="container mt-5 mb-5">
+        <h1><b>{{ t.subject }}</b></h1>
+
+        <div class="row mt-5">
+            <div class="col-lg-8">
+                <textarea class="form-control" style="height: 250px;" disabled>{{ t.content }}</textarea>
+            </div>
+            <div class="col-lg-4" style="margin: auto;">
+                <img src="{{ t.maker.getpic }}" width="100%">
+                <div class="text-center mt-4">
+                    <h4>made by <b>{{ t.maker }}</b></h4>
+                </div>
+            </div>
+        </div>
+
+        {% if user in t.voter.all %}
+            <div class="row mt-5">
+                {% for i in cset %}
+                    <div class="col-lg-4">
+                        <div class="text-center">
+                            <img src="{{ i.getpic }}" height="250px">
+                        </div>
+                        <div class="text-center mt-3">
+                            <h5><b>{{ i.chname }}</b></h5>
+                        </div>
+                            <div class="progress mt-3 mb-3">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ i.choicer.all.count | div:t.voter.all.count | mul:100 }}%">{{ i.choicer.all.count | div:t.voter.all.count | mul:100 }}%</div>
+                            </div>
+                        <textarea class="form-control" style="height: 80px;" disabled>{{ i.chcom }}</textarea>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-end mt-4">
+                <a href="{% url 'vote:cancel' t.id %}"class="btn btn-secondary">투표취소</a>
+            </div>
+        {% else %}
+            <form method="post" action="{% url 'vote:vote' t.id %}">
+                {% csrf_token %}
+                <div class="row mt-5">
+                    {% for i in cset %}
+                        <div class="col-lg-4">
+                            <div class="text-center mb-3">
+                                <input class="form-check-input" type="radio" name="ch" value="{{i.id}}" {% if forloop.first %} checked {% endif %}>
+                            </div>
+                            <div class="text-center">
+                                <img src="{{ i.getpic }}" height="250px">
+                            </div>
+                            <div class="text-center mt-3">
+                                <h5><b>{{ i.chname }}</b></h5>
+                            </div>
+                            <textarea class="form-control" style="height: 80px;" disabled>{{ i.chcom }}</textarea>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="text-end mt-4">
+                    <button class="btn btn-dark">투표하기</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock %}
